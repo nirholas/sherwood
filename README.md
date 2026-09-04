@@ -96,9 +96,9 @@ is used twice:
 Everything below runs against the live chain or a fork of it. No mocks in the integration path.
 
 ```
-$ forge test --root contracts                     55 passed
+$ forge test --root contracts                     61 passed
 $ RHC_RPC_URL=... forge test --match-contract Fork  6 passed
-$ pnpm -r test                                    42 passed
+$ pnpm -r test                                    54 passed
 $ node scripts/e2e.mjs                            end to end on a fork
 ```
 
