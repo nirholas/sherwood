@@ -11,7 +11,8 @@
     "forge:test": "forge test --root contracts -vv",
     "e2e": "node scripts/e2e.mjs",
     "discover": "node scripts/discover-pools.mjs",
-    "abis": "node scripts/emit-abis.mjs"
+    "abis": "node scripts/emit-abis.mjs",
+    "demo": "node scripts/demo.mjs"
   },
   "devDependencies": {
     "viem": "^2.21.0"

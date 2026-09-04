@@ -100,6 +100,7 @@ $ forge test --root contracts                     61 passed
 $ RHC_RPC_URL=... forge test --match-contract Fork  6 passed
 $ pnpm -r test                                    54 passed
 $ node scripts/e2e.mjs                            end to end on a fork
+$ node scripts/demo.mjs --check                   the running stack, every surface
 ```
 
 The fork suite reads the real SPY token, the real beacon every tokenized equity proxies to, and the
@@ -132,7 +133,7 @@ liquidates the position that makes unhealthy.
 | `apps/keeper/` | Liquidation bot that understands the halt shield |
 | `apps/api/` | Read API, and it serves the app |
 | `apps/web/` | Landing page and the working platform, no bundler |
-| `scripts/` | Pool discovery, ABI generation, end-to-end |
+| `scripts/` | Pool discovery, ABI generation, end-to-end, and the local demo |
 
 ### Contracts
 
@@ -153,7 +154,34 @@ liquidates the position that makes unhealthy.
 pnpm install
 forge build --root contracts
 forge test --root contracts
+```
 
+### Run the whole thing locally, in one command
+
+```bash
+pnpm demo
+```
+
+That forks Robinhood Chain, deploys the protocol, points it at the real SPY and NVDA pools, creates
+two markets with different terms, opens a position in each, and serves the API and the app against it.
+Open the URL it prints. Every price on the page is the price the exchange is printing right now,
+because the chain underneath is a copy of the real one.
+
+```
+  ┌──────────────────────────────────────────────────────────────┐
+  │  Sherwood is running at  http://localhost:8734               │
+  └──────────────────────────────────────────────────────────────┘
+
+  SPY    0x99ECcB3A…  $   774.31/share  LTV 70%  live
+  NVDA   0x4C1a72bE…  $   230.33/share  LTV 65%  live
+```
+
+`pnpm demo -- --halt` starts with SPY paused, so the halt shield is visible in the interface.
+`pnpm demo -- --check` boots everything, asserts every surface answers, and exits.
+
+### Other things worth running
+
+```bash
 # live equity quotes for every listed asset
 pnpm --filter @sherwood/reporter quote
 

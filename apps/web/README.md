@@ -2,11 +2,20 @@
 
 The landing page and the working platform. **No bundler, no framework, no dependencies.**
 
+The fastest way to see it working is the local demo, which forks Robinhood Chain, deploys the
+protocol against the real SPY and NVDA pools, opens a position in each market, and serves this
+directory against it:
+
 ```bash
-pnpm --filter @sherwood/api start     # serves this directory and the API it reads
+pnpm demo               # prints the URL to open
+pnpm demo -- --halt     # start with SPY paused, to see the halt shield in the interface
 ```
 
-Open `http://localhost:8790`.
+Against contracts that are already deployed:
+
+```bash
+SHERWOOD_FACTORY=0x... SHERWOOD_ORACLE=0x... pnpm --filter @sherwood/api start
+```
 
 | File | What it is |
 |---|---|
