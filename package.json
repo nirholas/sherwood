@@ -1,0 +1,13 @@
+{
+  "name": "sherwood",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Halt-aware lending against tokenized equities on Robinhood Chain",
+  "packageManager": "pnpm@10.32.1",
+  "scripts": {
+    "build": "pnpm -r build",
+    "test": "pnpm -r test",
+    "forge:build": "forge build --root contracts",
+    "forge:test": "forge test --root contracts -vv"
+  }
+}

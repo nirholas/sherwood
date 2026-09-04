@@ -1,0 +1,11 @@
+node_modules
+dist
+out
+cache
+broadcast
+.env
+*.log
+
+
+*.db
+*.db-journal
