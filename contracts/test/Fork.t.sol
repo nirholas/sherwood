@@ -30,13 +30,18 @@ contract ForkTest is Test {
     uint256 internal repKey2 = 0xB0B5EED;
     bool internal forked;
 
+    error ForkFailed(string rpc);
+
     function setUp() public {
         string memory rpc = vm.envOr("RHC_RPC_URL", string(""));
+        // Absent configuration is a deliberate skip. A *failed* fork is not: a suite that reports
+        // green while every test returns early is worse than no suite, and the only visible symptom
+        // is a suspiciously small gas figure that nobody reads.
         if (bytes(rpc).length == 0) return;
         try vm.createSelectFork(rpc) {
             forked = true;
         } catch {
-            return;
+            revert ForkFailed(rpc);
         }
 
         address[] memory reporters = new address[](2);
@@ -71,7 +76,7 @@ contract ForkTest is Test {
 
     /// @notice The interface this protocol was written against has to be the one the chain actually
     ///         implements. Every member below is called on the live SPY token.
-    function test_liveStockTokenExposesTheAssumedSurface() public onlyForked {
+    function test_liveStockTokenExposesTheAssumedSurface() public view onlyForked {
         IStockToken t = IStockToken(SPY);
         assertEq(t.decimals(), 18);
         assertEq(keccak256(bytes(t.symbol())), keccak256(bytes("SPY")));
@@ -87,7 +92,7 @@ contract ForkTest is Test {
 
     /// @notice All 254 tokenized equities are beacon proxies onto one implementation, which is why a
     ///         single integration covers the whole listing and why one upgrade would move all of them.
-    function test_stockBeaconIsLiveAndShared() public onlyForked {
+    function test_stockBeaconIsLiveAndShared() public view onlyForked {
         (bool ok, bytes memory ret) = STOCK_BEACON.staticcall(abi.encodeWithSignature("implementation()"));
         assertTrue(ok, "beacon must answer");
         address impl = abi.decode(ret, (address));
@@ -109,7 +114,7 @@ contract ForkTest is Test {
     /// @notice A second, independent derivation of the same price. `slot0.sqrtPriceX96` squared and
     ///         the exponential of the mean tick are different arithmetic over different pool state; if
     ///         they agree, the decimal handling and the pool orientation are both right.
-    function test_twapAgreesWithSpotSqrtPrice() public onlyForked {
+    function test_twapAgreesWithSpotSqrtPrice() public view onlyForked {
         (uint256 twapX26,) = oracle.twapRawX26(SPY);
         (bool ok, bytes memory ret) = SPY_USDG_500.staticcall(abi.encodeWithSignature("slot0()"));
         assertTrue(ok);
