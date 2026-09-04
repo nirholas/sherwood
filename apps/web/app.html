@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sherwood app</title>
+<meta name="description" content="Supply USDG, borrow against tokenized equities, and see exactly why a market is shielded.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>🏹</text></svg>">
+<link rel="stylesheet" href="/assets/app.css">
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="/">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M4 20 L20 4" stroke="#3ddc97" stroke-width="2" stroke-linecap="round"/>
+        <path d="M14 4h6v6" stroke="#3ddc97" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M4 12a8 8 0 0 0 8 8" stroke="#5f6975" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      Sherwood
+    </a>
+    <nav class="links">
+      <a href="/" class="hide-sm">Overview</a>
+      <a href="https://github.com/nirholas/sherwood" rel="noopener" class="hide-sm">GitHub</a>
+      <button class="btn sm" id="connect" type="button">Connect wallet</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap" style="padding-top:28px;padding-bottom:64px">
+  <div id="chain-notice"></div>
+
+  <section class="tight" style="padding-top:0" id="markets-section">
+    <div class="section-head" style="display:flex;align-items:end;justify-content:space-between;gap:16px;flex-wrap:wrap">
+      <div>
+        <h2 style="margin-bottom:4px">Markets</h2>
+        <p>One collateral, one loan asset, no shared risk. Pick a market to supply into or borrow from.</p>
+      </div>
+      <span class="faint mono" id="refreshed"></span>
+    </div>
+    <div class="card" style="padding:0;overflow:hidden">
+      <div id="markets"><div class="loading">Loading markets&hellip;</div></div>
+    </div>
+  </section>
+
+  <section class="tight" id="detail" hidden>
+    <div id="detail-body"></div>
+  </section>
+</main>
+
+<footer class="bottom">
+  <div class="wrap">
+    <span>Sherwood</span>
+    <a href="/">Overview</a>
+    <a href="https://github.com/nirholas/sherwood" rel="noopener">Source</a>
+    <span class="faint" style="margin-left:auto">Positions are liquidated by anyone, at any time, once they cross the limit.</span>
+  </div>
+</footer>
+
+<script type="module" src="/src/app.js"></script>
+</body>
+</html>

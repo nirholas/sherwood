@@ -1,0 +1,15 @@
+{
+  "name": "@sherwood/keeper",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Watches Sherwood markets, tracks halts, and liquidates unhealthy positions",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "start": "tsx src/main.ts",
+    "scan": "tsx src/scan.ts"
+  },
+  "dependencies": { "@sherwood/sdk": "workspace:*", "viem": "^2.21.0" },
+  "devDependencies": { "@types/node": "^22.0.0", "tsx": "^4.19.0", "typescript": "^5.6.0", "vitest": "^2.1.0" }
+}

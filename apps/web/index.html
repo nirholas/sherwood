@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sherwood: borrow against tokenized equities on Robinhood Chain</title>
+<meta name="description" content="Halt-aware lending markets for Robinhood Chain's tokenized equities. The price a liquidator can realise, bounded by the price the exchange prints, with corporate actions read off the token itself.">
+<meta property="og:title" content="Sherwood">
+<meta property="og:description" content="Halt-aware lending against tokenized equities on Robinhood Chain.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>🏹</text></svg>">
+<link rel="stylesheet" href="/assets/app.css">
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="/">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M4 20 L20 4" stroke="#3ddc97" stroke-width="2" stroke-linecap="round"/>
+        <path d="M14 4h6v6" stroke="#3ddc97" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M4 12a8 8 0 0 0 8 8" stroke="#5f6975" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      Sherwood
+    </a>
+    <nav class="links">
+      <a href="#how" class="hide-sm">How it works</a>
+      <a href="#halts" class="hide-sm">Halts</a>
+      <a href="#data">Live data</a>
+      <a href="https://github.com/nirholas/sherwood" rel="noopener">GitHub</a>
+      <a class="btn primary sm" href="/app.html">Open app</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow">Robinhood Chain &middot; eip155:4663</p>
+    <h1>Borrow dollars against<br>the stocks you already hold.</h1>
+    <p class="lede">
+      Robinhood Chain carries 254 tokenized equities with real liquidity and, until now, no price
+      oracle of any kind. Sherwood is the missing layer: isolated USDG lending markets that price
+      collateral at what a liquidator can actually sell it for, and that know what to do when the
+      market underneath halts.
+    </p>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:40px">
+      <a class="btn primary" href="/app.html">Open the app</a>
+      <a class="btn" href="https://github.com/nirholas/sherwood" rel="noopener">Read the contracts</a>
+    </div>
+
+    <div class="grid c4" id="hero-stats">
+      <div class="card">
+        <div class="stat"><span class="k">Equities priced</span><span class="v" id="s-assets">38</span><span class="sub">with a USDG pool deep enough to liquidate into</span></div>
+      </div>
+      <div class="card">
+        <div class="stat"><span class="k">Median basis</span><span class="v">65<span style="font-size:14px"> bps</span></span><span class="sub">on-chain token against its exchange print</span></div>
+      </div>
+      <div class="card">
+        <div class="stat"><span class="k">Interest during a halt</span><span class="v">0<span style="font-size:14px">%</span></span><span class="sub">the clock stops when you cannot act</span></div>
+      </div>
+      <div class="card">
+        <div class="stat"><span class="k">Admin keys on a market</span><span class="v">none</span><span class="sub">parameters are fixed at deployment</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section id="how">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>The price is the part everyone gets wrong</h2>
+      <p>
+        A tokenized share is not the share. It trades 24/7 on a chain while the underlying trades
+        for six and a half hours on a weekday. Any lending protocol has to pick which of those two
+        prices it believes, and both obvious answers are wrong.
+      </p>
+    </div>
+
+    <div class="grid c3">
+      <div class="card">
+        <h3>Settle on what a liquidator can realise</h3>
+        <p>
+          A liquidator seizes tokens and sells them into a pool on this chain. What they get there,
+          not what the share prints for on the NYSE, is what makes a liquidation solvent. So the
+          settlement price is the pool TWAP.
+        </p>
+      </div>
+      <div class="card">
+        <h3>Bound it with the exchange</h3>
+        <p>
+          A quorum of reporters attests the real equity price. It is never used as the price, only
+          as a bound on the pool. Move the pool and it walks away from the attestation; compromise
+          the reporters and they walk away from the pool. Either way the feed goes dark.
+        </p>
+      </div>
+      <div class="card">
+        <h3>Neither source can move the price alone</h3>
+        <p>
+          That is the whole security argument, and it inverts the usual oracle: the trustless source
+          decides, and the trusted one can only ever refuse to confirm. A compromised signer cannot
+          mint value out of nothing.
+        </p>
+      </div>
+    </div>
+
+    <div class="notice info" style="margin-top:24px">
+      <span class="icon">&#8594;</span>
+      <div>
+        <strong>The band is measured, not guessed.</strong>
+        Across all 38 listed equities the on-chain token tracks its underlying to a median of 65 basis
+        points and a 90th percentile of 163. The intraday band is 200bps and the off-hours band is 500,
+        because a token that trades all night legitimately reprices ahead of an open that has not
+        happened yet.
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section id="halts">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>What happens when trading stops</h2>
+      <p>
+        Every Robinhood stock token can be paused by its issuer. While it is, <code class="mono">transfer</code>
+        reverts, so collateral cannot be seized and a liquidation is not merely discouraged, it is
+        impossible. A lending protocol built for assets that never stop gets this catastrophically wrong.
+      </p>
+    </div>
+
+    <div class="grid c2">
+      <div class="card">
+        <h3 class="red">Without a halt shield</h3>
+        <p style="margin-bottom:12px">
+          Interest compounds through a two-day halt against borrowers who could not repay or top up.
+          Nobody can liquidate, so nothing clears. At the unpause the entire book is underwater at
+          once, at a price that gapped while nobody could act, and the first liquidator in the block
+          takes all of it at a discount.
+        </p>
+      </div>
+      <div class="card" style="border-color:var(--green-dim)">
+        <h3 class="green">What Sherwood does</h3>
+        <ul style="margin:0;padding-left:18px;color:var(--text-dim);font-size:14px;line-height:1.75">
+          <li>Interest stops accruing entirely. A halt costs the borrower nothing.</li>
+          <li>New borrows and collateral withdrawals are refused; health cannot be evaluated.</li>
+          <li>Repaying and supplying stay open, because they only reduce risk.</li>
+          <li>Depositors can still withdraw. A halt is not a reason to trap people who are owed money.</li>
+          <li>When the price returns, the liquidation bonus ramps from zero over four hours.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="notice warn" style="margin-top:20px">
+      <span class="icon">&#9888;</span>
+      <div>
+        <strong>The grace ramp is the point.</strong>
+        At the first second after a halt clears there is no profit in liquidating anyone, so nobody
+        does, and a borrower who was locked out gets a real chance to cure at the new price. By the end
+        of the window the full incentive is back and the market clears normally. The protocol trades
+        some liquidation speed for not confiscating positions over an event the borrower could not
+        respond to.
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Corporate actions, read off the token</h2>
+      <p>
+        Robinhood's stock tokens publish a <code class="mono">uiMultiplier</code>, and they publish the
+        <em>next</em> one along with the second it takes effect. That gives Sherwood something no
+        mainnet price feed has: advance, on-chain notice of a split. It is used twice.
+      </p>
+    </div>
+    <div class="grid c2">
+      <div class="card">
+        <h3>Before it lands</h3>
+        <p>
+          A scheduled fall in the multiplier is a scheduled fall in what a raw token is worth. It is
+          applied to collateral the moment it is announced, so nobody borrows against value that is
+          already booked to disappear. A scheduled rise is not credited early.
+        </p>
+      </div>
+      <div class="card">
+        <h3>Just after it lands</h3>
+        <p>
+          For one TWAP window the moving average straddles the jump and is wrong by up to the split
+          ratio. The feed reports <code class="mono">MultiplierTransition</code> and serves nothing.
+          A protocol that missed this would liquidate its whole book at a tenth of fair value the
+          morning after a reverse split.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section id="data">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Live markets</h2>
+      <p>Read directly from Robinhood Chain. Nothing here is illustrative.</p>
+    </div>
+    <div class="card" style="padding:0;overflow:hidden">
+      <div id="markets-mount"><div class="loading">Loading markets from the chain&hellip;</div></div>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section>
+  <div class="wrap narrow">
+    <div class="section-head">
+      <h2>Baskets diversify halt risk, not just returns</h2>
+      <p>
+        Spread the same collateral across ten tickers and one halt no longer freezes the position, it
+        removes one name's weight. That improvement is a mechanical property of the collateral rather
+        than an assumption about correlation, which is why basket markets can run at a higher
+        loan-to-value than any of their constituents would justify alone.
+      </p>
+      <p style="margin-top:12px">
+        A halted constituent is carried at zero, never at its last price, so a basket's reported value
+        is always a floor on the truth. And a redemption pays out every name it can move and books the
+        rest as a claim, so one frozen ticker delays a payout instead of trapping a liquidator.
+      </p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="bottom">
+  <div class="wrap">
+    <span>Sherwood</span>
+    <span class="faint">Robinhood Chain &middot; 4663</span>
+    <a href="https://github.com/nirholas/sherwood" rel="noopener">Source</a>
+    <a href="/app.html">App</a>
+    <span class="faint" style="margin-left:auto">
+      Lending against volatile collateral can lose you money. Read the contracts.
+    </span>
+  </div>
+</footer>
+
+<script type="module" src="/src/landing.js"></script>
+</body>
+</html>
