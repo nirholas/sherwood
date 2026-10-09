@@ -230,3 +230,7 @@ or anyone's position. See [docs/oracle.md](docs/oracle.md#trust).
 ## Licence
 
 MIT.
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=nirholas/sherwood&type=Date)](https://www.star-history.com/#nirholas/sherwood&Date)
