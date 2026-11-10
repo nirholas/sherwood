@@ -1,0 +1,16 @@
+{
+  "name": "sherwood",
+  "version": "0.1.0",
+  "description": "Read-side SDK and API for Sherwood, halt-aware lending against tokenized equities on Robinhood Chain.",
+  "author": {
+    "name": "nirholas"
+  },
+  "repository": "https://github.com/nirholas/sherwood",
+  "keywords": [
+    "sherwood",
+    "lending",
+    "robinhood-chain",
+    "tokenized-equities",
+    "oracle"
+  ]
+}
