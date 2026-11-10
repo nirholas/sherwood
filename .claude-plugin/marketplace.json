@@ -1,0 +1,19 @@
+{
+  "name": "sherwood",
+  "owner": {
+    "name": "nirholas"
+  },
+  "description": "Read-side SDK and API for Sherwood, halt-aware lending against tokenized equities on Robinhood Chain.",
+  "plugins": [
+    {
+      "name": "sherwood",
+      "source": "./",
+      "description": "Read-side SDK and API for Sherwood, halt-aware lending against tokenized equities on Robinhood Chain.",
+      "tags": [
+        "lending",
+        "robinhood-chain",
+        "sdk"
+      ]
+    }
+  ]
+}
