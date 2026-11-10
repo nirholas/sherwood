@@ -7,8 +7,9 @@
   "plugins": [
     {
       "name": "sherwood",
-      "source": "./",
+      "source": "./plugins/sherwood",
       "description": "Read-side SDK and API for Sherwood, halt-aware lending against tokenized equities on Robinhood Chain.",
+      "category": "development",
       "tags": [
         "lending",
         "robinhood-chain",

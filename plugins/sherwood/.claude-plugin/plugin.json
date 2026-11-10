@@ -6,6 +6,8 @@
     "name": "nirholas"
   },
   "repository": "https://github.com/nirholas/sherwood",
+  "homepage": "https://github.com/nirholas/sherwood",
+  "license": "Apache-2.0",
   "keywords": [
     "sherwood",
     "lending",
